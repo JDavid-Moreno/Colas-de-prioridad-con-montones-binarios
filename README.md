@@ -50,3 +50,29 @@ Por lo que, gracias a esta estructura, tenemos unas fórmulas que nos ayudan a c
 
 ### Operaciones
 
+#### Insertar
+
+Cuando se inserta un elemento, al ser una cola, este se ingresa al final de la lista, por lo que a su vez es hijo de un nodo, por lo que tenemos que revisar si cumple la condición (que sea mayor o menor, dependiendo el caso), en caso de que si la cumpla, se queda asi.
+
+En caso de que viole la condición, Entonces este se compara y cambia de posición con su padre, asi mantenemos el monto correcto.
+
+![Insertar.jpeg](Recursos/Insertar.jpeg)
+
+Hacer esto tiene una complejidad de $O(log(n))$, ya que máximo tenemos que subir hasta la altura del arbol, por lo que un arbol de 7 elementos, máximo subimos 1 o 2 niveles.
+
+#### Eliminar la raiz
+
+Para este caso, primero guardamos el valor, después el último elemento de la lista lo mandamos a la raiz, ahi comparamos con sus hijos, si uno es mayor, los cambiamos de posición para que ese hijo tome su posición.
+
+![Eliminar.jpeg](Recursos/Eliminar.jpeg)
+
+Al igual que insertar, su complejidad es de $O(log(n))$, pero a diferencia de insertar, este baja en vez de subir, pero de igual manera lo hace atravez de los niveles, por lo que de un arbol de 7 elementos solo se mueve 1 o 2 niveles.
+
+#### Obtener el máximo o minimo
+
+Únicamente debemos consultar la cabeza de la lista o en su defecto, el elemento del índice 0, por lo que su complejidad es de $O(1)$.
+
+---
+
+## Implementación
+
