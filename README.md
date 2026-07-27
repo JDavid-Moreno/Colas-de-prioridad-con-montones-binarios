@@ -185,3 +185,16 @@ Para la función de agregar, lo que se hace es que se manda toda la tupla, pero 
 ---
 
 ### Min Heap
+
+Ya que `MinHeap` es en esencia lo mismo, pero con los menores, por lo que únicamente sería cambiar los signos `>`, lo haremos de otra manera, usando la libreria `heapq`.
+
+`headpq` lo que hace es que nos da unas funciones que operan sobre una lista, las cuales mantienen las propiedades de `MinHeap`, esta solo funciona con `MinHeap` por eso `MaxHeap` se hizo desde 0. Entre las principales funciones de `heapq` esta:
+
+`list = []`
+* `heapq.heappush(list, 5)`: agregar un elemento a la lista; sin embargo, conforme se insertan elementos, este internamente hace el arbol binario para irlos organizando. por ejemplo si se inserta `5, 2, 8, 6, 3, 2, 9` en ese orden, da como resultado `[2, 3, 2, 6, 5, 8, 9]`.
+* `heapq.heappop(list)`: elimina el primer elemento de la lista o en su defecto, el de mayor prioridad.
+* `list[0]`: ver el elemento menor sin sacarlo de la lista.
+* `heapq.heapify(lista)`: hace que cualquier lista se vuelva `MinHeap`.
+* `heapq.heappushpop(list, x)`: hace un push seguido de un pop, por lo que si por ejemplo el elemento que se inserta es el minimo, sale instantáneamente, lo que lo hace más eficiente.
+* `heapq.heapreplace(heap, x)`: hace un pop seguido de un push, por lo que primero se borra el minimo y luego se inserta el nuevo elemento, lo hace mas eficiente que hacer las 2 por separado.
+
