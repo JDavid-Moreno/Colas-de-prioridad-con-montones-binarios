@@ -54,7 +54,7 @@ Por lo que, gracias a esta estructura, tenemos unas fórmulas que nos ayudan a c
 
 Cuando se inserta un elemento, al ser una cola, este se ingresa al final de la lista, por lo que a su vez es hijo de un nodo, por lo que tenemos que revisar si cumple la condición (que sea mayor o menor, dependiendo el caso), en caso de que si la cumpla, se queda asi.
 
-En caso de que viole la condición, Entonces este se compara y cambia de posición con su padre, asi mantenemos el monto correcto.
+En caso de que viole la condición usamos **sitf Up**, Es decir, este se compara y cambia de posición con su padre, asi mantenemos el monto correcto.
 
 ![Insertar.jpeg](Recursos/Insertar.jpeg)
 
@@ -62,7 +62,7 @@ Hacer esto tiene una complejidad de $O(log(n))$, ya que máximo tenemos que subi
 
 #### Eliminar la raiz
 
-Para este caso, primero guardamos el valor, después el último elemento de la lista lo mandamos a la raiz, ahi comparamos con sus hijos, si uno es mayor, los cambiamos de posición para que ese hijo tome su posición.
+Para este caso usamos **Sift down**, primero guardamos el valor, después el último elemento de la lista lo mandamos a la raiz, ahi comparamos con sus hijos, si uno es mayor, los cambiamos de posición para que ese hijo tome su posición.
 
 ![Eliminar.jpeg](Recursos/Eliminar.jpeg)
 
@@ -76,3 +76,112 @@ Al igual que insertar, su complejidad es de $O(log(n))$, pero a diferencia de in
 
 ## Implementación
 
+Para hacer más real la implementación, usaremos una tupla que guarde un `String` y su prioridad, con base en eso, haremos los dos casos de Max heap y Min heap.
+
+### Max heap
+
+Para este caso, lo mejor es separar la cola de prioridad en 2 clases, una manejará todo lo relacionado con el monton binario y la otra con todo el funcionamiento como tal de la cola, por otro lado, la clase que controla la cola, le manda a la clase de MaxHeap toda la tupla, pero con un extra que será un contador, este contador nos hara de "índice", para que en caso de que ambas prioridades sean iguales, vaya con la que entro primero, manteniendo el principio FIFO.
+
+```
+class MaxHeap:
+    def __init__(self):
+        self.data = []
+
+    def __len__(self):
+        return len(self.data)
+
+    def is_empty(self):
+        return len(self.data) == 0
+
+    def father(self, i):
+        return (i - 1) // 2
+
+    def left_son(self, i):
+        return  (2 * i) + 1
+
+    def right_son(self, i):
+        return (2 * i) + 2
+```
+
+Al crear la clase para `MaxHeap` usamos una lista normal y le agregamos sus funciones importantes, como su longitud, si esta vacia y las formulas para conocer el padre, y sus hijos.
+
+#### Insertar
+
+```
+    def sift_up(self, i):
+        while i > 0 and self.data[i] > self.data[self.father(i)]:
+            father = self.father(i)
+            self.data[i], self.data[father] = self.data[father], self.data[i]
+            i = father
+
+    def insert(self, value):
+        self.data.append(value)
+        self.sift_up(len(self.data) - 1)
+```
+
+Para insertar, necesitamos de **sift up** que es la que se encarga de comparar y cambiar (de ser necesario) los elementos del arbol para siempre este correcto.
+
+#### Eliminar el máximo
+
+```
+    def sitf_down(self, i):
+        n = len(self.data)
+        while True:
+            left = self.left_son(i)
+            right = self.right_son(i)
+            high = i
+
+            if left < n and self.data[left] > self.data[high]:
+                high = left
+            if right < n and self.data[right] > self.data[high]:
+                high = right
+
+            if high == i:
+                break
+
+            self.data[i], self.data[high] = self.data[high], self.data[i]
+            i = high
+
+    def extract_maximum(self):
+        if self.is_empty():
+            print("heap vacío")
+        root = self.data[0]
+
+        last = self.data.pop()
+        if self.data:
+            self.data[0] = last
+            self.sitf_down(0)
+        return root
+```
+
+Aquí es parecido al de insertar, pero con **sitf_down** para que una vez eliminado el máximo, se reemplace la raiz por el último elemento y se compare con sus hijos para ver si está bien posicionado.
+
+Ahora para la clase que se encarga de la cola como tal, es muy parecida, esta utiliza el contador para llevar el "índice", esto será más importante más adelante, igualmente cuenta con las funciones esenciales como saber su longitud o si está vacía.
+
+```
+class Tuple:
+    def __init__(self):
+        self.heap = MaxHeap()
+        self.counter = 0
+
+    def append(self, name, priority):
+        insert = (priority, -self.counter, name)
+        self.heap.insert(insert)
+        self.counter += 1
+
+    def next(self):
+        priority, _, name = self.heap.extract_maximum()
+        return name, priority
+
+    def is_empty(self):
+        return self.heap.is_empty()
+
+    def __len__(self):
+        return len(self.heap)
+```
+
+Para la función de agregar, lo que se hace es que se manda toda la tupla, pero se manda primero la prioridad para que sea el primer criterio el cual evalúa python para saber cuál es el máximo. En caso de que ambas tengan la misma prioridad, se va al segundo item que es el contador (se manda negativo, ya que como `MaxHeap` funciona que el mayor tenga más prioridad por lo que el que entro último sería primero lo cual estaría mal, por lo que se manda negativo para arreglar eso) el cual nunca es igual entre elementos por lo que ya queda ordenado. 
+
+---
+
+### Min Heap
