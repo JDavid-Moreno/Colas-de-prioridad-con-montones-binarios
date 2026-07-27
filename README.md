@@ -196,5 +196,51 @@ Ya que `MinHeap` es en esencia lo mismo, pero con los menores, por lo que única
 * `list[0]`: ver el elemento menor sin sacarlo de la lista.
 * `heapq.heapify(lista)`: hace que cualquier lista se vuelva `MinHeap`.
 * `heapq.heappushpop(list, x)`: hace un push seguido de un pop, por lo que si por ejemplo el elemento que se inserta es el minimo, sale instantáneamente, lo que lo hace más eficiente.
-* `heapq.heapreplace(heap, x)`: hace un pop seguido de un push, por lo que primero se borra el minimo y luego se inserta el nuevo elemento, lo hace mas eficiente que hacer las 2 por separado.
+* `heapq.heapreplace(heap, x)`: hace un pop seguido de un push, por lo que primero se borra el minimo y luego se inserta el nuevo elemento, lo hace más eficiente que hacer las 2 por separado.
+
+Para este caso, solo usaremos las primeras dos funciones, asi mismo, al usar esta libreria, solo necesitamos de una clase, ya que la otra está implícita gracias a la libreria importada, por lo que queda:
+
+```
+import heapq
+
+class PriorityQueue:
+    def __init__(self):
+        self.heap = []
+        self.counter = 0
+
+    def insert(self, priority, data):
+        heapq.heappush(self.heap, (priority, self.counter, data))
+        self.counter += 1
+
+    def extract_minimum(self):
+        priority, _, data = heapq.heappop(self.heap)
+        return data, priority
+
+    def view_minimum(self):
+        priority, _, data = self.heap[0]
+        return data, priority
+
+    def is_empty(self):
+        return len(self.heap) == 0
+
+    def __len__(self):
+        return len(self.heap)
+```
+
+Aquí nuevamente se utiliza un contador para los índices, pero ya que este es con los mínimos, no se necesita poner en negativo, Asi como, la mayoría de funciones se quedan casi igual a las que ya se habían visto anteriormente con `MaxHeap`.
+
+> [!NOTE]
+> **Nota:** la función `MaxHeap` también se puede hacer usando `heapq`, lo unico es que a la de insertar las prioridades, estas se vuelvan negativas, asi ya funciona correctamente, asi mismo, a la hora de devolver los datos para consultar orden o quienes ya pasaron, se devuelven otra vez a positivos.
+
+---
+
+## Material Adicional
+
+[![Heap Tree](https://img.youtube.com/vi/udZcgpg-Ss0/0.jpg)](https://www.youtube.com/watch?v=udZcgpg-Ss0)
+
+[![Colas Prioridad](https://img.youtube.com/vi/PpZK1a0cFEI/0.jpg)](https://www.youtube.com/watch?v=PpZK1a0cFEI)
+
+[![heapq](https://img.youtube.com/vi/svWLCS1EAU8/0.jpg)](https://www.youtube.com/watch?v=svWLCS1EAU8)
+
+[![Heap Tree](https://img.youtube.com/vi/BhDLf-Vm0ag/0.jpg)](https://www.youtube.com/watch?v=BhDLf-Vm0ag)
 
